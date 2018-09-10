@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="#57a358"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.diewland.oryorscanner.helper.CameraSourcePreview
         android:id="@+id/firePreview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -27,5 +27,12 @@
             android:layout_alignParentTop="true" />
 
     </com.diewland.oryorscanner.helper.CameraSourcePreview>
+
+    <Button
+        android:id="@+id/btn_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ตรวจสอบจากเว็บไซต์ อย."
+        android:textSize="18sp" />
 
 </LinearLayout>

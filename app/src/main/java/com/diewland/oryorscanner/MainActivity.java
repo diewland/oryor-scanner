@@ -1,29 +1,27 @@
 package com.diewland.oryorscanner;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.diewland.oryorscanner.helper.CameraSource;
 import com.diewland.oryorscanner.helper.CameraSourcePreview;
 import com.diewland.oryorscanner.helper.GraphicOverlay;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -35,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private String selectedModel = TEXT_DETECTION;
     private static final String TAG = "live-preview";
     private static final int PERMISSION_REQUESTS = 1;
+
+    private Button btn_link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         } else {
             getRuntimePermissions();
         }
+
+        // bind button
+        btn_link = (Button)findViewById(R.id.btn_link);
+        btn_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://oryor.com/oryor2015/check_product.php";
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
+            }
+        });
     }
 
     private void createCameraSource(String model) {

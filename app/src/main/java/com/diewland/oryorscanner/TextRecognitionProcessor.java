@@ -25,18 +25,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.diewland.lib.Oryor;
+import com.diewland.oryorscanner.helper.FrameMetadata;
+import com.diewland.oryorscanner.helper.GraphicOverlay;
 import com.diewland.oryorscanner.helper.TextGraphic;
+import com.diewland.oryorscanner.helper.VisionProcessorBase;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
-import com.diewland.oryorscanner.helper.FrameMetadata;
-import com.diewland.oryorscanner.helper.GraphicOverlay;
-import com.diewland.oryorscanner.helper.VisionProcessorBase;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Processor for the text recognition demo. */
 public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVisionText> {
@@ -86,12 +89,14 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
             for (int j = 0; j < lines.size(); j++) {
                 List<FirebaseVisionText.Element> elements = lines.get(j).getElements();
                 for (int k = 0; k < elements.size(); k++) {
-                    //GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, elements.get(k));
-                    //graphicOverlay.add(textGraphic);
+                    GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, elements.get(k));
+                    graphicOverlay.add(textGraphic);
 
-                    String patt = "\\d\\d-\\d-\\d\\d\\d\\d\\d-\\d-\\d\\d\\d\\d";
                     String text = elements.get(k).getText();
-                    if(text.matches(patt)){
+                    Pattern p = Pattern.compile("[\\s\\S]*(\\d\\d-\\d-\\d\\d\\d\\d\\d-\\d-\\d\\d\\d\\d)[\\s\\S]*");
+                    Matcher m = p.matcher(text);
+
+                    if(m.matches()){
 
                         // lock process
                         processing_flag = true;
@@ -104,7 +109,7 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
 
                         // prepare api
                         String api = "http://porta.fda.moph.go.th/FDA_SEARCH_ALL/PRODUCT/FRM_PRODUCT_FOOD.aspx?fdpdtno=%s";
-                        String url = String.format(api, text.replaceAll("-", ""));
+                        String url = String.format(api, m.group(1).replaceAll("-", ""));
 
                         // call api
                         RequestQueue queue = Volley.newRequestQueue(this.ctx);
@@ -112,8 +117,9 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
-                                        alert_box.setMessage(response);
-                                        Log.d(TAG, response);
+                                        String out = Oryor.parse(response);
+                                        alert_box.setMessage(out);
+                                        Log.d(TAG, out);
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
