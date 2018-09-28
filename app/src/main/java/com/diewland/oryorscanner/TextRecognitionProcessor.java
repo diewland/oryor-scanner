@@ -29,6 +29,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,10 +41,12 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
 
     private final FirebaseVisionTextRecognizer detector;
     private Context ctx;
+    private Timestamp prev_ts;
 
     public TextRecognitionProcessor(Context ctx) {
         detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
         this.ctx = ctx;
+        this.prev_ts = null;
     }
 
     @Override
@@ -82,10 +85,24 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
 
                     if(m.matches()){
 
-                        // TODO something start intent twice
-                        Intent intent = new Intent(ctx, ResultActivity.class);
-                        intent.putExtra("oy_no", m.group(1));
-                        ctx.startActivity(intent);
+                        // is this scan safe ?
+                        Timestamp current_ts = new Timestamp(System.currentTimeMillis());
+                        boolean safe_scan = true;
+                        if(prev_ts != null){
+                            // at least 5 seconds from last scan
+                            safe_scan = (current_ts.getTime() - prev_ts.getTime()) >= 5*1000;
+                        }
+
+                        if((prev_ts == null) || safe_scan){
+                            prev_ts = current_ts;
+
+                            Intent intent = new Intent(ctx, ResultActivity.class);
+                            intent.putExtra("oy_no", m.group(1));
+                            ctx.startActivity(intent);
+                        }
+                        else {
+                            Log.d(TAG, "Twice scan detect, skip this action.");
+                        }
 
                     }
                 }
