@@ -38,6 +38,21 @@ public class Oryor {
         return result;
     }
 
+     public static HashMap<String, String> parseHash(String html){
+        HashMap<String, String> result = new HashMap<>();
+        for(Map.Entry<String, String> entry : patts.entrySet()){
+            String id = entry.getKey();
+            String label = entry.getValue();
+
+            Pattern p = Pattern.compile("[\\s\\S]+<span id=\""+ id +"\">(.+?)</span>[\\s\\S]+");
+            Matcher m = p.matcher(html);
+            if(m.matches()){
+                result.put(label, m.group(1));
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
 
         String s = "       <div class=\"col-md-2\">\n" +
@@ -135,7 +150,8 @@ public class Oryor {
                 "        </div>\n" +
                 "\n";
 
-        System.out.println(Oryor.parse(s));
+        // System.out.println(Oryor.parse(s));
+        System.out.println(Oryor.parseHash(s));
 
     }
 }

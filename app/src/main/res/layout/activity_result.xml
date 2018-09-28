@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".ResultActivity">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ข้อมูลผลิตภัณฑ์"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:stretchColumns="1">
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="เลขสารบบ" />
+
+                <TextView
+                    android:id="@+id/oy_no"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="ประเภท" />
+
+                <TextView
+                    android:id="@+id/type"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="อาหาร" />
+
+                <TextView
+                    android:id="@+id/food"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="ชื่อผลิตภัณฑ์ (TH)" />
+
+                <TextView
+                    android:id="@+id/product_th"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="ชื่อผลิตภัณฑ์ (EN)" />
+
+                <TextView
+                    android:id="@+id/product_en"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="สถานะผลิตภัณฑ์" />
+
+                <TextView
+                    android:id="@+id/product_status"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="ชื่อผู้รับอนุญาต" />
+
+                <TextView
+                    android:id="@+id/license_name"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="ชื่อสถานที่" />
+
+                <TextView
+                    android:id="@+id/place_name"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="ที่ตั้ง" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:padding="3dip"
+                    android:text="สถานะใบอนุญาตสถานที่" />
+
+                <TextView
+                    android:id="@+id/place_license_status"
+                    android:padding="3dip"
+                    android:text="" />
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/btn_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="สแกนใหม่อีกครั้ง" />
+
+</LinearLayout>

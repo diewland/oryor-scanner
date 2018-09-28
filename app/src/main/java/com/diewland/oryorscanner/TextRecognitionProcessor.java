@@ -14,18 +14,10 @@
 package com.diewland.oryorscanner;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.diewland.lib.Oryor;
 import com.diewland.oryorscanner.helper.FrameMetadata;
 import com.diewland.oryorscanner.helper.GraphicOverlay;
 import com.diewland.oryorscanner.helper.TextGraphic;
@@ -48,13 +40,10 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
 
     private final FirebaseVisionTextRecognizer detector;
     private Context ctx;
-    private boolean processing_flag;
-    private AlertDialog alert_box;
 
     public TextRecognitionProcessor(Context ctx) {
         detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
         this.ctx = ctx;
-        this.processing_flag = false;
     }
 
     @Override
@@ -77,11 +66,6 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
         @NonNull FrameMetadata frameMetadata,
         @NonNull GraphicOverlay graphicOverlay) {
 
-        // when loading info, skip success callback
-        if(processing_flag){
-            return;
-        }
-
         graphicOverlay.clear();
         List<FirebaseVisionText.TextBlock> blocks = results.getTextBlocks();
         for (int i = 0; i < blocks.size(); i++) {
@@ -98,52 +82,15 @@ public class TextRecognitionProcessor extends VisionProcessorBase<FirebaseVision
 
                     if(m.matches()){
 
-                        // lock process
-                        processing_flag = true;
+                        // TODO something start intent twice
+                        Intent intent = new Intent(ctx, ResultActivity.class);
+                        intent.putExtra("oy_no", m.group(1));
+                        ctx.startActivity(intent);
 
-                        // create dialogbox
-                        alert_box = createAlertBox();
-                        alert_box.setTitle("Scan Result");
-                        alert_box.setMessage("Loading...");
-                        alert_box.show();
-
-                        // prepare api
-                        String api = "http://porta.fda.moph.go.th/FDA_SEARCH_ALL/PRODUCT/FRM_PRODUCT_FOOD.aspx?fdpdtno=%s";
-                        String url = String.format(api, m.group(1).replaceAll("-", ""));
-
-                        // call api
-                        RequestQueue queue = Volley.newRequestQueue(this.ctx);
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        String out = Oryor.parse(response);
-                                        alert_box.setMessage(out);
-                                        Log.d(TAG, out);
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                alert_box.setMessage(error.toString());
-                                Log.d(TAG, error.toString());
-                            }
-                        });
-                        queue.add(stringRequest);
                     }
                 }
             }
         }
-    }
-
-    private AlertDialog createAlertBox(){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this.ctx)
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    processing_flag = false;
-                }
-            });
-        return dialog.create();
     }
 
     @Override
