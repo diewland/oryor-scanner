@@ -152,4 +152,10 @@
         android:layout_height="wrap_content"
         android:text="สแกนใหม่อีกครั้ง" />
 
+    <Button
+        android:id="@+id/btn_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ร้องเรียนผลิตภัณฑ์" />
+
 </LinearLayout>

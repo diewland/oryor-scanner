@@ -1,5 +1,7 @@
 package com.diewland.oryorscanner;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,6 +36,7 @@ public class ResultActivity extends AppCompatActivity {
     private TextView tv_place_license_status;
 
     private Button btn_scan;
+    private Button btn_report;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class ResultActivity extends AppCompatActivity {
         tv_location = (TextView)findViewById(R.id.location);
         tv_place_license_status = (TextView)findViewById(R.id.place_license_status);
         btn_scan = (Button)findViewById(R.id.btn_scan);
+        btn_report = (Button)findViewById(R.id.btn_report);
 
         // get oryor number from scanner
         String oy_no = getIntent().getStringExtra("oy_no");
@@ -65,6 +69,19 @@ public class ResultActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // bind report button
+        btn_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://oryor.com/oryor2015/complain.php";
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
+            }
+        });
+
+        // show loading message
+        Toast.makeText(this, "กำลังหาข้อมูล..", Toast.LENGTH_SHORT).show();
     }
 
     private void queryDataToScreen(String oy_no){
